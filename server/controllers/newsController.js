@@ -25,9 +25,9 @@ exports.getNewsById = async (req, res) => {
 };
 
 exports.createNews = async (req, res) => {
-	const { title, image, content, user_id } = req.body;
+	const { title, image, content, id_user } = req.body;
 	try {
-		const rowCount = await newsModel.createNews(title, image, content, user_id);
+		const rowCount = await newsModel.createNews(title, image, content, id_user);
 		res.status(201).send("News created successfully");
 	} catch (error) {
 		console.error(error);

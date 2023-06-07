@@ -1,11 +1,19 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const newsRoutes = require("./routes/newsRoutes");
 const fastNewsRoutes = require("./routes/fastNewsRoutes");
-
 // Middlewares
+app.use(
+	cors({
+		origin: "http://localhost:3001",
+		credentials: true,
+	})
+);
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 exports.getAllUsers = async (req, res) => {
 	try {
@@ -31,12 +32,20 @@ exports.login = async (req, res) => {
 		}
 		const payload = {
 			userId: user.id,
+			name: user.name,
+			password: user.password,
 			role: user.role || "user",
 		};
 		const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
 			expiresIn: "12h",
 		});
-		res.cookie("token", token, { httpOnly: true, secure: true });
+
+		res.cookie("token", token, {
+			maxAge: 36000000, // thời gian sống cookie là 1 giờ
+			path: "/", // cookie áp dụng cho toàn bộ trang web
+			httpOnly: false, // cookie chỉ được sử dụng qua HTTP, không thể truy cập bằng JavaScript
+			secure: true, // cookie chỉ được gửi qua HTTPS nếu trang web đang chạy dưới giao thức HTTPS
+		});
 		res.status(200).json(user);
 	} catch (err) {
 		console.error(err);
@@ -45,7 +54,12 @@ exports.login = async (req, res) => {
 };
 exports.logout = async (req, res) => {
 	try {
-		res.clearCookie("token");
+		res.clearCookie("token", {
+			maxAge: 36000000, // thời gian sống cookie là 1 giờ
+			path: "/", // cookie áp dụng cho toàn bộ trang web
+			httpOnly: false, // cookie chỉ được sử dụng qua HTTP, không thể truy cập bằng JavaScript
+			secure: true,
+		});
 		res.status(200).send("Logout successful");
 	} catch (err) {
 		console.error(err);

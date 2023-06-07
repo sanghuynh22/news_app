@@ -12,11 +12,11 @@ exports.getNewsById = async (id) => {
 	return rows[0];
 };
 
-exports.createNews = async (title, image, content, user_id) => {
+exports.createNews = async (title, image, content, id_user) => {
 	console.log("pool", pool);
 	const query =
 		"INSERT INTO news (title, image,content,id_user) VALUES ($1, $2, $3, $4)";
-	const values = [title, image, content, user_id];
+	const values = [title, image, content, id_user];
 	const { rowCount } = await pool.query(query, values);
 	return rowCount;
 };

@@ -1,18 +1,25 @@
 import React from "react";
-
-const New = () => {
+import { News } from "../type";
+import moment from "moment";
+import { Link, useNavigate } from "react-router-dom";
+const New: React.FC<News> = ({ id, title, content, image, created_at }) => {
+	const navigate = useNavigate();
+	const handleClickDetail = () => {
+		navigate(`/detail/${id}`);
+	};
 	return (
-		<div className="new_container">
+		<div className="new_container" onClick={handleClickDetail}>
 			<div className="new">
-				<img src="" className="new_img" />
+				<img src={image || ""} className="new_img" />
 
 				<div className="new_info">
 					<p className="new_info_p">
-						Tin vắn Crypto 30/05: Bitcoin hiện có thể tiếp tục xu hướng tăng
-						cùng tin tức Ripple, OKX, Cardano, Chainlink, Flare, Jimbos
-						Protocol, Avalanche, CBDC, Dogecoin, TrigonX
+						{title ||
+							"Tin vắn Crypto 30/05: Bitcoin hiện có thể tiếp tục xu hướng tăngcùng tin tức Ripple, OKX, Cardano, Chainlink, Flare, Jimbos 	Protocol, Avalanche, CBDC, Dogecoin, TrigonX"}
 					</p>
-					<p className="new_info_time">30/05/2023 20:18</p>
+					<p className="new_info_time">
+						{moment(created_at).format("DD/MM/YYYY HH:mm")}
+					</p>
 				</div>
 			</div>
 		</div>

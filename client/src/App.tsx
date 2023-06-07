@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./index.css";
 import {
 	BrowserRouter as Router,
@@ -22,6 +22,10 @@ import Login from "./components/Login";
 import Create from "./components/Create";
 import CreateNews from "./Pages/CreateNews";
 import CreateFastNews from "./Pages/CreateFastNews";
+import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import { setCurrentUser } from "./actions/user/currentUser";
+
 function PrivateRoute({
 	children,
 	...rest
@@ -38,13 +42,29 @@ function PrivateRoute({
 	return children as JSX.Element;
 }
 function App() {
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const isLoggedIn: boolean = false;
-	if (!isLoggedIn && location.pathname === "/create") {
-		navigate("/login");
-		console.log("flase");
-	}
+	// const isLoggedIn: boolean = false;
+	const { currentUser } = useSelector((state: any) => state.user.currentUser);
+	// if (!isLoggedIn && location.pathname === "/create") {
+	// 	navigate("/login");
+	// 	console.log("flase");
+	// }
+
+	useEffect(() => {
+		const token = Cookies.get("token");
+
+		if (token !== null && token !== undefined && token !== "") {
+			const payload = JSON.parse(atob(token.split(".")[1]));
+			dispatch(setCurrentUser(payload));
+			console.log("JWT have: ", token);
+		} else {
+			console.log("JWT donhave!: ");
+		}
+		console.log("JWT : ", token);
+		console.log("currentUser : ", currentUser);
+	}, [dispatch, location]);
 	return (
 		<Routes>
 			<Route path="/" element={<Home />} />
@@ -54,17 +74,23 @@ function App() {
 			<Route path="/schedule" element={<Schedule />} />
 			<Route path="/mostview" element={<MostView />} />
 			<Route path="/fastnews" element={<FastNews />} />
-			<Route path="/login" element={<Login />} />
-			<Route
+			{!currentUser && <Route path="/login" element={<Login />} />}
+
+			{/* <Route
 				path="/create"
 				element={
 					<PrivateRoute>
 						<Create />
 					</PrivateRoute>
 				}
-			/>
-			<Route path="/createNews" element={<CreateNews />} />
-			<Route path="/createFastNews" element={<CreateFastNews />} />
+			/> */}
+			{currentUser && (
+				<>
+					<Route path="/create" element={<Create />} />
+					<Route path="/createNews" element={<CreateNews />} />
+					<Route path="/createFastNews" element={<CreateFastNews />} />
+				</>
+			)}
 
 			<Route path="/test" element={<Test />} />
 			<Route path="*" element={<Error />} />

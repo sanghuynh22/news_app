@@ -1,41 +1,23 @@
 import React from "react";
+import { FastNews } from "../type";
 
 interface InformationProps {
 	date?: Date;
+	content?: string;
 }
 
-const Information: React.FC<InformationProps> = ({ date }) => {
+const Information: React.FC<InformationProps> = ({ date, content }) => {
 	const formattedDate = date
 		? date.toLocaleTimeString([], { hour12: false })
 		: "";
-
+	console.log("date", date);
 	return (
 		<div className="infor">
 			<div className="infor_time">
 				<p className="infor_time_p">{formattedDate}</p>
 			</div>
 			<div className="infor_content">
-				<img src="" className="infor_content_img" />
-				<p className="infor_content_p">
-					CaiXin - PMI (Nghiệp sản xuất) Trung Quốc
-				</p>
-			</div>
-			<div className="infor_bottom">
-				<div className="infor_bottom_option">
-					<p className="infor_bottom_p">
-						Trước đó:<span className="infor_bottom_span">49.50</span>{" "}
-					</p>
-				</div>
-				<div className="infor_bottom_option">
-					<p className="infor_bottom_p">
-						Kỳ vọng:<span className="infor_bottom_span">49.50</span>{" "}
-					</p>
-				</div>
-				<div className="infor_bottom_option">
-					<p className="infor_bottom_p">
-						Thực tế:<span className="infor_bottom_span">50.50</span>{" "}
-					</p>
-				</div>
+				<p className="infor_content_p">{content}</p>
 			</div>
 		</div>
 	);

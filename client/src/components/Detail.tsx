@@ -1,39 +1,113 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import Header from "./Header";
 import parse from "html-react-parser";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllNews } from "../actions/news/getAllNews";
+import moment from "moment";
+import { getAllUser } from "../actions/user/getAllUser";
+interface NewsItem {
+	id: string;
+	title: string;
+	content: string;
+	id_user: string;
+	created_at: string;
+	image: string;
+}
 
 const Detail = () => {
-	const { id } = useParams();
-	const text: string =
-		"<h1>Bitcoin: The Future of Currency or a Risky Investment?</h1><p>Bitcoin, the world's most popular cryptocurrency, has been making headlines for years. Some see it as a revolutionary new form of currency, while others view it with skepticism and caution.</p><p>At its core, Bitcoin is a digital currency that operates on a decentralized peer-to-peer network. Transactions are recorded on a public ledger called the blockchain, which is maintained by a network of computers around the world. This means that transactions can be processed more quickly and cheaply than with traditional banking systems. Additionally, Bitcoin is not subject to the same government regulations and oversight that traditional currencies are, which some see as a way to protect their financial privacy.</p><p>Proponents of Bitcoin argue that it offers several advantages over traditional currencies. For one, it could provide increased financial freedom and security for individuals who may be unbanked or underbanked. In addition, it could help streamline cross-border transactions and reduce fees associated with traditional banking methods.</p><p>However, there are also many risks associated with investing in Bitcoin. Its highly volatile nature means that its value can fluctuate wildly in short periods of time, leading to potential losses for investors. Additionally, Bitcoin has been linked to illegal activities such as money laundering and drug trafficking, which has led to increased scrutiny from law enforcement agencies.</p><p>Despite these concerns, Bitcoin's popularity continues to grow. Major companies such as Tesla and PayPal have recently announced plans to accept Bitcoin as a form of payment, further legitimizing the digital currency. Some analysts predict that Bitcoin could eventually become a widely accepted alternative to traditional currencies, while others see it as a speculative asset with potential for significant returns.</p><p>So, what does the future hold for Bitcoin? Only time will tell. While there are certainly risks associated with investing in the cryptocurrency, its continued growth and acceptance suggest that it may have a place in the global economy. As with any investment, it's important for individuals to carefully consider the risks and potential rewards before deciding whether or not to invest in Bitcoin.</p>";
+	const dispatch = useDispatch();
+	const { id } = useParams<{ id: string }>(); //
+	const { news } = useSelector((state: any) => state.news.getAllNews);
+	const { userList } = useSelector((state: any) => state.user.getAllUser);
+
+	useEffect(() => {
+		dispatch(getAllNews()).then(() => {
+			console.log("get all news detail success!");
+		});
+		dispatch(getAllUser());
+	}, [id]);
+	function levenshteinDistance(a: string, b: string) {
+		const distanceMatrix = Array(b.length + 1)
+			.fill(null)
+			.map(() => Array(a.length + 1).fill(null));
+
+		for (let i = 0; i <= a.length; i += 1) {
+			distanceMatrix[0][i] = i;
+		}
+
+		for (let j = 0; j <= b.length; j += 1) {
+			distanceMatrix[j][0] = j;
+		}
+
+		for (let j = 1; j <= b.length; j += 1) {
+			for (let i = 1; i <= a.length; i += 1) {
+				const indicator = a[i - 1] === b[j - 1] ? 0 : 1;
+				distanceMatrix[j][i] = Math.min(
+					distanceMatrix[j][i - 1] + 1,
+					distanceMatrix[j - 1][i] + 1,
+					distanceMatrix[j - 1][i - 1] + indicator
+				);
+			}
+		}
+
+		return distanceMatrix[b.length][a.length];
+	}
+	function getSimilarNews(newsList: NewsItem[], currentNewsTitle: string) {
+		const similarNews = newsList
+			?.filter((news) => news.id !== theNews?.id)
+			?.map((news) => ({
+				title: news.title,
+				distance: levenshteinDistance(news.title, currentNewsTitle),
+				image: news.image, // Add the "image" property here
+			}))
+			.filter(({ distance }) => distance !== null && distance < 5)
+			.sort((a, b) => a.distance - b.distance)
+			.slice(0, 6);
+
+		return similarNews;
+	}
+
+	const theNews: any = useMemo(() => {
+		const foundNews: NewsItem | undefined = news?.find(
+			(singleNews: NewsItem) => singleNews.id.toString() === id?.toString()
+		);
+		console.log("userlist: ", userList);
+		return foundNews ?? null;
+	}, [id, news]);
+	const theAuthor = useMemo(() => {
+		const foundNewsAuthor: any | undefined = userList.find(
+			(user: any) => user.id.toString() === theNews?.id_user.toString()
+		);
+		console.log("author", foundNewsAuthor?.name);
+		return foundNewsAuthor ?? null;
+	}, [id, news]);
+	const similarNews = useMemo(
+		() => getSimilarNews(news, theNews?.title),
+		[news, theNews, id]
+	);
+
 	return (
 		<div className="container">
 			<Header />
 			<div className="detail">
 				<div className="detail_top">
-					<p className="detail_title">
-						Solana (SOL) bứt phá: Bền vững hay Tạm thời?
+					<p className="detail_title">{theNews?.title}</p>
+					<p className="detail_time">
+						{moment(theNews?.created_at).format("DD/MM/YYYY HH:mm")}
 					</p>
-					<p className="detail_time">01/06/2023 11:26</p>
 				</div>
-				<div className="detail_content">
-					{parse(text)}
-					<div className="detail_author">
-						<p className="detail_author_p">SN_Nour</p>
-					</div>
+				<div className="detail_content">{parse(theNews?.content ?? "")}</div>
+				<div className="detail_author">
+					<p className="detail_author_p">{theAuthor?.name}</p>
 				</div>
 				<p className="detail_options_label">Gợi ý</p>
 
 				<div className="detail_options">
-					{[1, 2, 3, 4, 5, 6].map(() => (
-						<div className="detail_option">
-							<img src="" className="detail_option_img" />
-							<p className="detail_option_p">
-								Chainlink (LINK) sẽ bật tăng mạnh mẽ nếu hỗ trợ này được giữ
-								vữngChainlink (LINK) sẽ bật tăng mạnh mẽ nếu hỗ trợ này được giữ
-								vững
-							</p>
+					{similarNews?.map((news) => (
+						<div className="detail_option" key={news.title}>
+							<img src={news?.image} className="detail_option_img" />
+							<p className="detail_option_p">{news.title}</p>
 						</div>
 					))}
 				</div>

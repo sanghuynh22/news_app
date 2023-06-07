@@ -25,9 +25,9 @@ exports.getFastNewsById = async (req, res) => {
 };
 
 exports.createFastNews = async (req, res) => {
-	const { content, user_id } = req.body;
+	const { content, id_user } = req.body;
 	try {
-		const rowCount = await fastNewsModel.createFastNews(content, user_id);
+		const rowCount = await fastNewsModel.createFastNews(content, id_user);
 		res.status(201).send("News created successfully");
 	} catch (error) {
 		console.error(error);

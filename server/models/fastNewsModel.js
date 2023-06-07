@@ -12,10 +12,10 @@ exports.getFastNewsById = async (id) => {
 	return rows[0];
 };
 
-exports.createFastNews = async (content, user_id) => {
+exports.createFastNews = async (content, id_user) => {
 	console.log("pool", pool);
 	const query = "INSERT INTO fastnews (content,id_user) VALUES ($1, $2)";
-	const values = [content, user_id];
+	const values = [content, id_user];
 	const { rowCount } = await pool.query(query, values);
 	return rowCount;
 };
