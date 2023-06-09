@@ -2,7 +2,14 @@ import React from "react";
 import { News } from "../type";
 import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
-const New: React.FC<News> = ({ id, title, content, image, created_at }) => {
+const New: React.FC<News> = ({
+	id,
+	title,
+	content,
+	image,
+	created_at,
+	views,
+}) => {
 	const navigate = useNavigate();
 	const handleClickDetail = () => {
 		navigate(`/detail/${id}`);
@@ -20,6 +27,11 @@ const New: React.FC<News> = ({ id, title, content, image, created_at }) => {
 					<p className="new_info_time">
 						{moment(created_at).format("DD/MM/YYYY HH:mm")}
 					</p>
+					{views ? (
+						<p className="new_info_time">lượt xem: {views.toString()}</p>
+					) : (
+						<p className="new_info_time">lượt xem: 0</p>
+					)}
 				</div>
 			</div>
 		</div>

@@ -45,9 +45,9 @@ const FastNews: React.FC = () => {
 							<p className="fastnews_label">{date}</p>
 						</div>
 						{newsList.map((news) => (
-							<Information
-								date={new Date(news.createdAt)}
-								content={news.content}
+							<div
+							// date={new Date(news.createdAt)}
+							// content={news.content}
 							/>
 						))}
 					</React.Fragment>

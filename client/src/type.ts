@@ -11,6 +11,7 @@ export interface News {
 	image?: string;
 	id_user?: number;
 	created_at?: Date | undefined;
+	views?: number;
 }
 
 export interface FastNews {

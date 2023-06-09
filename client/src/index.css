@@ -173,8 +173,8 @@ thead {
   top: 56px;
   background-color: #f5f7fa;
   border-bottom: 1px solid #dfe3e8;
+  z-index: 10;
 }
-
 th {
 
   text-align: left;
@@ -203,6 +203,31 @@ tr:hover td {
   height: 40px;
   border-radius:50%;
   object-fit: cover;
+}
+.pagination{
+  display:flex;
+  margin:20px 0;
+  gap:10px
+}
+.pagination button.active {
+  background-color: #007acc;
+  color: #fff;
+  border-color: #007acc;
+}
+.chart-item {
+  position: relative;
+}
+
+.chart-item canvas {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+table tr td:last-child {
+  padding-right: 0;
 }
 /* NEWS */
 .news_search{

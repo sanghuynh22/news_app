@@ -25,3 +25,18 @@ exports.createUser = async (name, password) => {
 	const { rowCount } = await pool.query(query, values);
 	return rowCount;
 };
+
+exports.addViews = async (views_id, id_user) => {
+	console.log("pool", pool);
+	const query =
+		"UPDATE users SET views_id = array_append(views_id,$1) WHERE id = $2";
+	const values = [views_id, id_user];
+	const { rowCount } = await pool.query(query, values);
+	return rowCount;
+};
+exports.getViewsOfUser = async (id_user) => {
+	const query = "SELECT users.views_id FROM users where id = $1";
+	const values = [id_user];
+	const { rows } = await pool.query(query, values);
+	return rows;
+};

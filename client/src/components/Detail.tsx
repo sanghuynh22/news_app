@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "./Header";
 import parse from "html-react-parser";
@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllNews } from "../actions/news/getAllNews";
 import moment from "moment";
 import { getAllUser } from "../actions/user/getAllUser";
+import axios from "axios";
+
 interface NewsItem {
 	id: string;
 	title: string;
@@ -17,9 +19,10 @@ interface NewsItem {
 
 const Detail = () => {
 	const dispatch = useDispatch();
-	const { id } = useParams<{ id: string }>(); //
+	const { id } = useParams<{ id: string }>();
 	const { news } = useSelector((state: any) => state.news.getAllNews);
 	const { userList } = useSelector((state: any) => state.user.getAllUser);
+	const { currentUser } = useSelector((state: any) => state.user.currentUser);
 
 	useEffect(() => {
 		dispatch(getAllNews()).then(() => {
@@ -27,6 +30,25 @@ const Detail = () => {
 		});
 		dispatch(getAllUser());
 	}, [id]);
+	useEffect(() => {
+		const timeoutId = setTimeout(countViews, 2000);
+		return () => {
+			clearTimeout(timeoutId);
+		};
+	}, [id]);
+	const countViews = () => {
+		console.log("id", id);
+		console.log("currentUser", currentUser);
+
+		axios
+			.post(`http://localhost:3000/api/news/views`, {
+				id_user: currentUser?.id || null,
+				id: id,
+			})
+			.then((res) => {
+				console.log("count success!");
+			});
+	};
 	function levenshteinDistance(a: string, b: string) {
 		const distanceMatrix = Array(b.length + 1)
 			.fill(null)

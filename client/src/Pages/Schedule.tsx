@@ -1,26 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Information from "../components/Information";
-
-const Schedule: React.FC = () => {
-	const today: Date = new Date();
-
+import axios from "axios";
+const Schedule: React.FC<any> = (): any => {
 	const [currentDate, setCurrentDate] = useState<Date>(new Date());
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+	const [events, setEvents] = useState([]);
 
-	const handlePrevWeek = (): void => {
-		const prevWeek = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-		setCurrentDate(prevWeek);
-	};
-
-	const handleNextWeek = (): void => {
-		const nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-		setCurrentDate(nextWeek);
-	};
-
-	const handleSelectDate = (date: Date): void => {
-		console.log("date click : ", date);
-		setSelectedDate(date);
+	// Lấy danh sách các sự kiện từ API Investing.com
+	const fetchEvents = async (date: Date): Promise<void> => {
+		try {
+			const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+				.toString()
+				.padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+			const url = `https://www.fxtin.com/page/finance/calendarEvents?offsetTz=420&important=0&date=${formattedDate}`;
+			const response = await axios.get(url);
+			const data = await response.data.data.list;
+			setEvents(data);
+			console.log("res data: ", events);
+		} catch (error) {
+			console.log("error schedule fetch: ", error);
+		}
 	};
 
 	// Lấy ngày bắt đầu của tuần hiện tại (thứ 2)
@@ -50,24 +50,43 @@ const Schedule: React.FC = () => {
 				)
 		);
 
+	const handlePrevWeek = (): void => {
+		const prevWeek = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+		setCurrentDate(prevWeek);
+	};
+
+	const handleNextWeek = (): void => {
+		const nextWeek = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+		setCurrentDate(nextWeek);
+	};
+
+	const handleSelectDate = async (date: Date): Promise<void> => {
+		setSelectedDate(date);
+		fetchEvents(date);
+	};
+	useEffect(() => {
+		fetchEvents(new Date());
+	}, []);
 	return (
-		<div className="container">
+		<div className="container" style={{ padding: "0 0 5px 0" }}>
+			{/* Header */}
 			<Header />
-			{/*  calendar-box-center */}
+
+			{/* Calendar */}
 			<div className="calendar-box-center">
 				<div className="calendar-header">
 					<h2>
-						{startOfWeek.getMonth() + 1}/{year}
+						{month} {year}
 					</h2>
 				</div>
 				<div className="calendar-grid">
-					<div className={`calendar-day`}>T2</div>
-					<div className={`calendar-day`}>T3</div>
-					<div className={`calendar-day`}>T4</div>
-					<div className={`calendar-day`}>T5</div>
-					<div className={`calendar-day`}>T6</div>
-					<div className={`calendar-day`}>T7</div>
-					<div className={`calendar-day`}>CN</div>
+					<div className="calendar-day">Mon</div>
+					<div className="calendar-day">Tue</div>
+					<div className="calendar-day">Wed</div>
+					<div className="calendar-day">Thu</div>
+					<div className="calendar-day">Fri</div>
+					<div className="calendar-day">Sat</div>
+					<div className="calendar-day">Sun</div>
 					{daysInWeek.map((day: Date) => (
 						<div
 							key={day.toString()}
@@ -78,7 +97,7 @@ const Schedule: React.FC = () => {
 							}`}
 							onClick={() => handleSelectDate(day)}
 						>
-							{`${day.getDate()}/${day.getMonth() + 1}`}
+							{day.getDate()}
 						</div>
 					))}
 				</div>
@@ -87,9 +106,23 @@ const Schedule: React.FC = () => {
 					<button onClick={handleNextWeek}>{">"}</button>
 				</div>
 			</div>
-			{new Array(6).fill(0).map((_, i: number) => (
-				<Information key={i} date={selectedDate} />
-			))}
+
+			{/* Information */}
+			<>
+				{events?.map(
+					(even: any, i: any) =>
+						even["content"] && (
+							<Information
+								flag={even.content[even.content.length - 1].country_flag}
+								translate={even.content[even.content.length - 1].translate}
+								previous={even.content[even.content.length - 1].previous}
+								consensus={even.content[even.content.length - 1].consensus}
+								actual={even.content[even.content.length - 1].actual}
+								date={even.content[even.content.length - 1].pub_time}
+							/>
+						)
+				)}
+			</>
 		</div>
 	);
 };
