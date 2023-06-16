@@ -7,10 +7,14 @@ import { getAllNews } from "../actions/news/getAllNews";
 import { useDispatch, useSelector } from "react-redux";
 import ChartAnnotation from "chartjs-plugin-annotation";
 import "chartjs-plugin-crosshair";
+import { logoutUser } from "../actions/user/logoutUser";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [currentPrice, setCurrentPrice] = useState<any>();
 	const [dataBTC, setDataBTC] = useState<any>(null);
+	const { currentUser } = useSelector((state: any) => state.user.currentUser);
 	const { news } = useSelector((state: any) => state.news.getAllNews);
 	const chartRef = useRef<HTMLCanvasElement>(null);
 	const [chartInstance, setChartInstance] = useState<Chart | null>(null);
@@ -65,7 +69,6 @@ const Home = () => {
 										callback: function (value: any, index: any, values: any) {
 											if (response.data.prices[value]) {
 												const timestamp = response.data.prices[value][0];
-												console.log("timestamp : ", timestamp);
 												const date = new Date(Number(timestamp));
 												return date.toLocaleDateString("vi-VN", {
 													year: "numeric",
@@ -99,6 +102,7 @@ const Home = () => {
 							},
 							plugins: {
 								tooltip: {
+									// enabled: true,
 									intersect: false,
 									mode: "index",
 									callbacks: {
@@ -107,49 +111,6 @@ const Home = () => {
 										},
 									},
 								},
-								annotation: {
-									annotations: [
-										{
-											type: "line",
-											// mode: "vertical",
-											scaleID: "x",
-											value: new Date().getTime(),
-											borderColor: "red",
-											borderWidth: 1,
-											label: {
-												// enabled: true,
-												content: "Today",
-												// position: "top",
-											},
-										},
-									],
-								},
-							},
-							onHover: function (event, chartElement) {
-								if (
-									chartInstance &&
-									chartInstance.tooltip &&
-									chartInstance.tooltip.active
-								) {
-									const activePoint =
-										chartInstance.tooltip.getActiveElements()[0];
-									if (activePoint) {
-										const ctx = chartInstance.ctx;
-										const x = activePoint.element.x;
-										const topY = chartInstance.chartArea.top;
-										const bottomY = chartInstance.chartArea.bottom;
-										// draw vertical line
-										ctx.save();
-										ctx.beginPath();
-										ctx.moveTo(x, topY);
-										ctx.lineTo(x, bottomY);
-										ctx.lineWidth = 1;
-										ctx.strokeStyle = "#000";
-										ctx.globalCompositeOperation = "destination-over"; // Sửa lại dòng này
-										ctx.stroke();
-										ctx.restore();
-									}
-								}
 							},
 						},
 						plugins: [ChartAnnotation],
@@ -166,10 +127,43 @@ const Home = () => {
 	useEffect(() => {
 		dispatch(getAllNews());
 	}, []);
-
+	const handleClickLogout = () => {
+		dispatch(logoutUser()).then(() => {
+			console.log("logout Success Home!");
+		});
+	};
+	const handleLogIn = () => {
+		navigate("/login");
+	};
 	return (
 		<div className="container">
 			<Header />
+			<div className="home_info">
+				{currentUser ? (
+					<>
+						<div className="home_info_container">
+							<div className="home_info_avatar">
+								<p className="home_info_avatar_p">
+									{currentUser.name.slice(0, 1)}
+								</p>
+							</div>
+							<p className="home_info_p">{currentUser.name}</p>
+						</div>
+						<div className="home_info_container" onClick={handleClickLogout}>
+							<p
+								className="home_info_p"
+								style={{ fontSize: "14px", fontWeight: "400" }}
+							>
+								Đăng xuất
+							</p>
+						</div>
+					</>
+				) : (
+					<div className="home_info_container" onClick={handleLogIn}>
+						<p className="home_info_p">Đăng nhập</p>
+					</div>
+				)}
+			</div>
 			<div className="home_price">
 				Bitcoin :
 				<span className="home_price_span">{Math.floor(currentPrice)} </span>

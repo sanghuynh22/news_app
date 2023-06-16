@@ -7,9 +7,10 @@ import { getAllNews } from "../actions/news/getAllNews";
 import moment from "moment";
 import { getAllUser } from "../actions/user/getAllUser";
 import axios from "axios";
+import { updateCoinsUser } from "../actions/user/updateCoins";
 
 interface NewsItem {
-	id: string;
+	id: number;
 	title: string;
 	content: string;
 	id_user: string;
@@ -36,17 +37,34 @@ const Detail = () => {
 			clearTimeout(timeoutId);
 		};
 	}, [id]);
-	const countViews = () => {
+	const countViews = async () => {
 		console.log("id", id);
 		console.log("currentUser", currentUser);
-
+		console.log("userList", userList);
+		if (currentUser) {
+			console.log("có current user 1 (detail)!");
+			const findUser: any = await userList.find(
+				(user: any) => user.id === currentUser.userId
+			);
+			let amount = 0;
+			if (id) {
+				console.log("findUser: ", findUser);
+				console.log("có id 2 (detail)");
+				if (findUser?.views_id.indexOf(parseInt(id)) === -1) {
+					amount = (await findUser.coins) + 5;
+					dispatch(updateCoinsUser(amount, currentUser.userId)).then(() => {
+						console.log("update Coin success , amount: ", amount);
+					});
+				}
+			}
+		}
 		axios
 			.post(`http://localhost:3000/api/news/views`, {
-				id_user: currentUser?.id || null,
+				id_user: currentUser?.userId || null,
 				id: id,
 			})
 			.then((res) => {
-				console.log("count success!");
+				console.log("count views success!");
 			});
 	};
 	function levenshteinDistance(a: string, b: string) {

@@ -35,6 +35,7 @@ exports.login = async (req, res) => {
 			name: user.name,
 			password: user.password,
 			role: user.role || "user",
+			views_id: user.views_id,
 		};
 		const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
 			expiresIn: "12h",
@@ -61,6 +62,18 @@ exports.logout = async (req, res) => {
 			secure: true,
 		});
 		res.status(200).send("Logout successful");
+	} catch (err) {
+		console.error(err);
+		res.status(500).send("Internal Server Error");
+	}
+};
+exports.updateCoins = async (req, res) => {
+	const { amount, id_user } = req.body;
+	console.log("amount", amount);
+	console.log("id_user", id_user);
+	try {
+		const result = await userModel.updateCoin(amount, id_user);
+		res.status(200).json(result);
 	} catch (err) {
 		console.error(err);
 		res.status(500).send("Internal Server Error");

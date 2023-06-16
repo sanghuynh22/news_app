@@ -2,6 +2,7 @@ export interface User {
 	name: string;
 	password: string;
 	role: string;
+	views_id?: number;
 }
 
 export interface News {

@@ -4,6 +4,7 @@ import Information from "../components/Information";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllFastNews } from "../actions/fastNews/getAllFastNews";
 import moment from "moment";
+import FastNew from "../components/FastNew";
 interface NewsData {
 	content: string;
 	createdAt: Date; // Modify this field to match the returned date format
@@ -45,10 +46,7 @@ const FastNews: React.FC = () => {
 							<p className="fastnews_label">{date}</p>
 						</div>
 						{newsList.map((news) => (
-							<div
-							// date={new Date(news.createdAt)}
-							// content={news.content}
-							/>
+							<FastNew date={new Date(news.createdAt)} content={news.content} />
 						))}
 					</React.Fragment>
 				))}

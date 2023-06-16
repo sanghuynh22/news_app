@@ -44,7 +44,7 @@ const ChartItem: React.FC<ChartItemProps> = ({ crypto }) => {
 				`chart-${crypto.id}`
 			) as HTMLCanvasElement | null;
 			if (ctx) {
-				if (chartRef.current) chartRef.current.destroy(); // destroy old chart before reusing canvas
+				if (chartRef.current) chartRef.current.destroy();
 				chartRef.current = new Chart(ctx, {
 					type: "line",
 					data: {

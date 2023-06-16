@@ -25,6 +25,7 @@ import CreateFastNews from "./Pages/CreateFastNews";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { setCurrentUser } from "./actions/user/currentUser";
+import Coin from "./components/Coin";
 
 function PrivateRoute({
 	children,
@@ -53,17 +54,21 @@ function App() {
 	// }
 
 	useEffect(() => {
-		const token = Cookies.get("token");
+		const findToken = async () => {
+			const token = Cookies.get("token");
 
-		if (token !== null && token !== undefined && token !== "") {
-			const payload = JSON.parse(atob(token.split(".")[1]));
-			dispatch(setCurrentUser(payload));
-			console.log("JWT have: ", token);
-		} else {
-			console.log("JWT donhave!: ");
-		}
-		console.log("JWT : ", token);
-		console.log("currentUser : ", currentUser);
+			if (token !== null && token !== undefined && token !== "") {
+				const payload = await JSON.parse(atob(token.split(".")[1]));
+				console.log("payload: ", payload);
+				dispatch(setCurrentUser(payload));
+				console.log("JWT have: ", token);
+			} else {
+				console.log("JWT donhave!: ");
+			}
+			console.log("JWT : ", token);
+			console.log("currentUser : ", currentUser);
+		};
+		findToken();
 	}, [dispatch, location]);
 	return (
 		<Routes>
@@ -89,6 +94,7 @@ function App() {
 					<Route path="/create" element={<Create />} />
 					<Route path="/createNews" element={<CreateNews />} />
 					<Route path="/createFastNews" element={<CreateFastNews />} />
+					<Route path="/coin" element={<Coin />} />
 				</>
 			)}
 

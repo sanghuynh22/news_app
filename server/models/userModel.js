@@ -19,7 +19,6 @@ exports.getUserById = async (id) => {
 };
 
 exports.createUser = async (name, password) => {
-	console.log("pool", pool);
 	const query = "INSERT INTO users (name, password) VALUES ($1, $2)";
 	const values = [name, password];
 	const { rowCount } = await pool.query(query, values);
@@ -27,10 +26,15 @@ exports.createUser = async (name, password) => {
 };
 
 exports.addViews = async (views_id, id_user) => {
-	console.log("pool", pool);
 	const query =
 		"UPDATE users SET views_id = array_append(views_id,$1) WHERE id = $2";
 	const values = [views_id, id_user];
+	const { rowCount } = await pool.query(query, values);
+	return rowCount;
+};
+exports.updateCoin = async (amount, id_user) => {
+	const query = "UPDATE users SET coins = $1 WHERE id = $2";
+	const values = [amount, id_user];
 	const { rowCount } = await pool.query(query, values);
 	return rowCount;
 };

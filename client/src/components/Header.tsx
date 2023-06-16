@@ -2,9 +2,10 @@ import React from "react";
 import logo from "../assets/logo.jpeg";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 const Header = () => {
 	const location = useLocation();
-
+	const { currentUser } = useSelector((state: any) => state.user.currentUser);
 	return (
 		<div className="header">
 			<Link
@@ -52,6 +53,16 @@ const Header = () => {
 			>
 				<p className="header_option_p">Thông tin nhanh</p>
 			</Link>
+			{currentUser && (
+				<Link
+					to="/coin"
+					className={`header_option ${
+						location.pathname === "/coin" && "active"
+					}`}
+				>
+					<p className="header_option_p">SimCoin</p>
+				</Link>
+			)}
 		</div>
 	);
 };
