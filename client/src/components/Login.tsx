@@ -11,14 +11,11 @@ const Login = () => {
 	const [password, setPassword] = useState<string>("");
 	const { userList } = useSelector((state: any) => state.user.getAllUser);
 	useEffect(() => {
-		dispatch(getAllUser()).then(() => {
-			console.log("get all User success! : ", userList);
-		});
+		dispatch(getAllUser()).then(() => {});
 	}, []);
 	const handleClickLogin = () => {
 		if (name && password) {
 			dispatch(loginUser(name, password)).then(() => {
-				console.log("login success!");
 				setName("");
 				setPassword("");
 				navigate("/");
@@ -32,7 +29,6 @@ const Login = () => {
 	const handleClickLoginFast = (name: string, password: string) => {
 		dispatch(loginUser(name, password)).then(() => {
 			navigate("/");
-			console.log("login fast success!");
 		});
 	};
 	return (
@@ -46,6 +42,7 @@ const Login = () => {
 							.map((user: any) => (
 								<div
 									className="login_left_option"
+									key={user.id}
 									onClick={() => handleClickLoginFast(user.name, user.password)}
 								>
 									<p className="login_left_name">{user.name}</p>
@@ -61,6 +58,7 @@ const Login = () => {
 							.map((user: any) => (
 								<div
 									className="login_left_option"
+									key={user.id}
 									onClick={() => handleClickLoginFast(user.name, user.password)}
 								>
 									<p className="login_left_name">{user.name}</p>
@@ -76,6 +74,7 @@ const Login = () => {
 							.map((user: any) => (
 								<div
 									className="login_left_option"
+									key={user.id}
 									onClick={() => handleClickLoginFast(user.name, user.password)}
 								>
 									<p className="login_left_name">{user.name}</p>

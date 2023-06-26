@@ -26,7 +26,7 @@ export const getNews = (id: number): any => {
 		dispatch(getNewsRequest());
 		return new Promise((resolve, reject) => {
 			axios
-				.get(`http://localhost:3000/api/news/${id}`)
+				.get(`${process.env.REACT_APP_API_URL}/news/${id}`)
 				.then((response) => {
 					dispatch(getNewsSuccess(response.data));
 					resolve(response.data);

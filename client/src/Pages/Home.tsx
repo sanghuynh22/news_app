@@ -25,15 +25,10 @@ const Home = () => {
 				"https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30"
 			)
 			.then((response) => {
-				console.log("data BTC chart : ", response.data);
 				setDataBTC(response.data);
 				setCurrentPrice(
 					response.data.prices[response.data.prices.length - 1][1]
 				);
-				// if (chartInstance) {
-				// 	chartInstance.destroy();
-				// }
-
 				const ctx = chartRef.current?.getContext("2d");
 				if (ctx) {
 					const chart = new Chart(ctx, {
@@ -119,18 +114,14 @@ const Home = () => {
 					setChartInstance(chart);
 				}
 			})
-			.catch((error) => {
-				console.log(error);
-			});
+			.catch((error) => {});
 	}, [news]);
 
 	useEffect(() => {
 		dispatch(getAllNews());
 	}, []);
 	const handleClickLogout = () => {
-		dispatch(logoutUser()).then(() => {
-			console.log("logout Success Home!");
-		});
+		dispatch(logoutUser()).then(() => {});
 	};
 	const handleLogIn = () => {
 		navigate("/login");
@@ -172,15 +163,18 @@ const Home = () => {
 			<div className="home_chart">
 				<canvas ref={chartRef}></canvas>
 			</div>
-			{news?.map((item: any, i: number) => (
-				<New
-					key={item?.id}
-					id={item?.id}
-					title={item?.title}
-					created_at={item?.created_at}
-					image={item?.image}
-				/>
-			))}
+			{news
+				?.sort((a: any, b: any) => b.created_at - a.created_at)
+				.map((item: any, i: number) => (
+					<New
+						key={item?.id}
+						id={item?.id}
+						title={item?.title}
+						created_at={item?.created_at}
+						image={item?.image}
+						views={item?.views}
+					/>
+				))}
 			<div className="home_footer">@SangHuynh</div>
 		</div>
 	);

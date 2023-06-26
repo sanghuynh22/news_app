@@ -32,7 +32,7 @@ export const loginUser = (name: string, password: string): any => {
 			}
 
 			const response = await axios.post(
-				`http://localhost:3000/api/users/login`,
+				`${process.env.REACT_APP_API_URL}/users/login`,
 				{ name, password },
 				{
 					withCredentials: true,

@@ -25,7 +25,10 @@ export const updateCoinsUser = (amount: number, id_user: number): any => {
 		dispatch(updateCoinsUserRequest());
 		return new Promise((resolve, reject) => {
 			axios
-				.post(`http://localhost:3000/api/users/updateCoin`, { amount, id_user })
+				.post(`${process.env.REACT_APP_API_URL}/users/updateCoin`, {
+					amount,
+					id_user,
+				})
 				.then((response) => {
 					dispatch(updateCoinsUserSuccess());
 					resolve(response.data);

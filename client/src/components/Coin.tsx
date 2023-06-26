@@ -131,9 +131,7 @@ const Coin = () => {
 		}
 	}, [getAccountInfo]);
 	useEffect(() => {
-		dispatch(getAllUser()).then(() => {
-			console.log("get userList Coin!");
-		});
+		dispatch(getAllUser()).then(() => {});
 	}, []);
 	useEffect(() => {
 		fetchTransactions();

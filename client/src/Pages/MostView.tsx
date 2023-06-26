@@ -8,9 +8,7 @@ const MostView = () => {
 	const dispatch = useDispatch();
 	const { news } = useSelector((state: any) => state.news.getAllNews);
 	useEffect(() => {
-		dispatch(getAllNews()).then(() => {
-			console.log("get All news mostview!");
-		});
+		dispatch(getAllNews()).then(() => {});
 	}, []);
 	return (
 		<div className="container">

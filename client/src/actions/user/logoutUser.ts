@@ -27,7 +27,7 @@ export const logoutUser = (): any => {
 		return new Promise((resolve, reject) => {
 			axios
 				.post(
-					`http://localhost:3000/api/users/logout`,
+					`${process.env.REACT_APP_API_URL}/users/logout`,
 					{},
 					{
 						withCredentials: true,

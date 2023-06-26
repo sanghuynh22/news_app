@@ -9,7 +9,6 @@ const Create = () => {
 	const { currentUser } = useSelector((state: any) => state.user.currentUser);
 	const handleClickLogout = () => {
 		dispatch(logoutUser()).then(() => {
-			console.log("logout Success!");
 			navigate("/login");
 		});
 	};

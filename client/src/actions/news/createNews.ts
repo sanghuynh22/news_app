@@ -27,20 +27,20 @@ export const createNews = (data: News): any => {
 		return new Promise((resolve, reject) => {
 			axios
 				.post(
-					`http://localhost:3000/api/users/logout`,
-					{...data,action:"create_news"},
+					`${process.env.REACT_APP_API_URL}/news`,
+					{ ...data, action: "create_news" },
 					{
 						withCredentials: true,
 					}
 				)
 				.then((response) => {
 					dispatch(createNewsSuccess(response.data));
-					resolve(response.data); // resolve with data if needed
+					resolve(response.data);
 				})
 				.catch((error) => {
 					const errorMsg: string = error.message;
 					dispatch(createNewsFailure(errorMsg));
-					reject(errorMsg); // reject with error message
+					reject(errorMsg);
 				});
 		});
 	};

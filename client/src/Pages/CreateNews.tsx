@@ -91,8 +91,6 @@ export default function CreateNews() {
 			<button onClick={handleClickCreate} style={{ marginTop: "60px" }}>
 				Create
 			</button>
-			<div>{content}</div>
-			<div>{parse(content)}</div>
 		</div>
 	);
 }

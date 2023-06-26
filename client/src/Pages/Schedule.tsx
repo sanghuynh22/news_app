@@ -7,23 +7,20 @@ const Schedule: React.FC<any> = (): any => {
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 	const [events, setEvents] = useState([]);
 
-	// Lấy danh sách các sự kiện từ API Investing.com
 	const fetchEvents = async (date: Date): Promise<void> => {
 		try {
 			const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
 				.toString()
 				.padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
-			const url = `https://www.fxtin.com/page/finance/calendarEvents?offsetTz=420&important=0&date=${formattedDate}`;
+			const url = `${process.env.REACT_APP_SCHEDULE_URL}/calendarEvents?offsetTz=420&important=0&date=${formattedDate}`;
 			const response = await axios.get(url);
 			const data = await response.data.data.list;
 			setEvents(data);
-			console.log("res data: ", events);
 		} catch (error) {
 			console.log("error schedule fetch: ", error);
 		}
 	};
 
-	// Lấy ngày bắt đầu của tuần hiện tại (thứ 2)
 	const startOfWeek: Date = new Date(
 		currentDate.setDate(
 			currentDate.getDate() -
@@ -32,13 +29,11 @@ const Schedule: React.FC<any> = (): any => {
 		)
 	);
 
-	// Lấy tháng và năm của tuần hiện tại
 	const month: string = startOfWeek.toLocaleString("default", {
 		month: "long",
 	});
 	const year: number = startOfWeek.getFullYear();
 
-	// Tạo mảng các ngày trong tuần hiện tại
 	const daysInWeek: Date[] = new Array(7)
 		.fill(0)
 		.map(
@@ -113,6 +108,7 @@ const Schedule: React.FC<any> = (): any => {
 					(even: any, i: any) =>
 						even["content"] && (
 							<Information
+								key={i}
 								flag={even.content[even.content.length - 1].country_flag}
 								translate={even.content[even.content.length - 1].translate}
 								previous={even.content[even.content.length - 1].previous}

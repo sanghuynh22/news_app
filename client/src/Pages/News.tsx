@@ -14,9 +14,7 @@ const News = () => {
 	);
 
 	useEffect(() => {
-		dispatch(getAllNews()).then((res: any) => {
-			console.log("get All News success! : ", res);
-		});
+		dispatch(getAllNews()).then((res: any) => {});
 	}, []);
 
 	const filteredNews = useMemo(() => {
@@ -65,6 +63,7 @@ const News = () => {
 						title={singleNews.title}
 						created_at={singleNews.created_at}
 						image={singleNews.image}
+						views={singleNews.views}
 					/>
 				))
 			)}

@@ -25,20 +25,20 @@ export const createFastNews = (data: FastNews): any => {
 		return new Promise((resolve, reject) => {
 			axios
 				.post(
-					`http://localhost:3000/api/fastnews`,
-					{...data,action:"create_fastnews"},
+					`${process.env.REACT_APP_API_URL}/fastnews`,
+					{ ...data, action: "create_fastnews" },
 					{
 						withCredentials: true,
 					}
 				)
 				.then((response) => {
 					dispatch(createFastNewsSuccess(response.data));
-					resolve(response.data); 
+					resolve(response.data);
 				})
 				.catch((error) => {
 					const errorMsg: string = error.message;
 					dispatch(createFastNewsFailure(errorMsg));
-					reject(errorMsg); 
+					reject(errorMsg);
 				});
 		});
 	};

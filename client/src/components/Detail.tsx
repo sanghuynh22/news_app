@@ -26,9 +26,7 @@ const Detail = () => {
 	const { currentUser } = useSelector((state: any) => state.user.currentUser);
 
 	useEffect(() => {
-		dispatch(getAllNews()).then(() => {
-			console.log("get all news detail success!");
-		});
+		dispatch(getAllNews()).then(() => {});
 		dispatch(getAllUser());
 	}, [id]);
 	useEffect(() => {
@@ -38,34 +36,24 @@ const Detail = () => {
 		};
 	}, [id]);
 	const countViews = async () => {
-		console.log("id", id);
-		console.log("currentUser", currentUser);
-		console.log("userList", userList);
 		if (currentUser) {
-			console.log("có current user 1 (detail)!");
 			const findUser: any = await userList.find(
 				(user: any) => user.id === currentUser.userId
 			);
 			let amount = 0;
 			if (id) {
-				console.log("findUser: ", findUser);
-				console.log("có id 2 (detail)");
 				if (findUser?.views_id.indexOf(parseInt(id)) === -1) {
 					amount = (await findUser.coins) + 5;
-					dispatch(updateCoinsUser(amount, currentUser.userId)).then(() => {
-						console.log("update Coin success , amount: ", amount);
-					});
+					dispatch(updateCoinsUser(amount, currentUser.userId)).then(() => {});
 				}
 			}
 		}
 		axios
-			.post(`http://localhost:3000/api/news/views`, {
+			.post(`${process.env.REACT_APP_API_URL}/news/views`, {
 				id_user: currentUser?.userId || null,
 				id: id,
 			})
-			.then((res) => {
-				console.log("count views success!");
-			});
+			.then((res) => {});
 	};
 	function levenshteinDistance(a: string, b: string) {
 		const distanceMatrix = Array(b.length + 1)
@@ -99,7 +87,7 @@ const Detail = () => {
 			?.map((news) => ({
 				title: news.title,
 				distance: levenshteinDistance(news.title, currentNewsTitle),
-				image: news.image, // Add the "image" property here
+				image: news.image,
 			}))
 			.filter(({ distance }) => distance !== null && distance < 5)
 			.sort((a, b) => a.distance - b.distance)
@@ -112,14 +100,12 @@ const Detail = () => {
 		const foundNews: NewsItem | undefined = news?.find(
 			(singleNews: NewsItem) => singleNews.id.toString() === id?.toString()
 		);
-		console.log("userlist: ", userList);
 		return foundNews ?? null;
 	}, [id, news]);
 	const theAuthor = useMemo(() => {
 		const foundNewsAuthor: any | undefined = userList.find(
 			(user: any) => user.id.toString() === theNews?.id_user.toString()
 		);
-		console.log("author", foundNewsAuthor?.name);
 		return foundNewsAuthor ?? null;
 	}, [id, news]);
 	const similarNews = useMemo(
@@ -144,12 +130,21 @@ const Detail = () => {
 				<p className="detail_options_label">Gợi ý</p>
 
 				<div className="detail_options">
-					{similarNews?.map((news) => (
-						<div className="detail_option" key={news.title}>
-							<img src={news?.image} className="detail_option_img" />
-							<p className="detail_option_p">{news.title}</p>
-						</div>
-					))}
+					{similarNews?.length > 0
+						? similarNews.map((news: any) => (
+								<div className="detail_option" key={news.id}>
+									<img src={news?.image} className="detail_option_img" />
+									<p className="detail_option_p">{news.title}</p>
+								</div>
+						  ))
+						: news
+								.filter((item: any) => item.id !== id)
+								.map((item: any) => (
+									<div className="detail_option" key={item.id}>
+										<img src={item?.image} className="detail_option_img" />
+										<p className="detail_option_p">{item.title}</p>
+									</div>
+								))}
 				</div>
 			</div>
 		</div>

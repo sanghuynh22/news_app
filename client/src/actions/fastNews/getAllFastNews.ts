@@ -26,7 +26,7 @@ export const getAllFastNews = (): any => {
 		dispatch(getAllFastNewsRequest());
 		return new Promise((resolve, reject) => {
 			axios
-				.get(`http://localhost:3000/api/fastnews`)
+				.get(`${process.env.REACT_APP_API_URL}/fastnews`)
 				.then((response) => {
 					dispatch(getAllFastNewsSuccess(response.data));
 					resolve(response.data);

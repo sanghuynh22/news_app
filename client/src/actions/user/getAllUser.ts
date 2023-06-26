@@ -26,7 +26,9 @@ export const getAllUser = (): any => {
 		dispatch(getAllUserRequest());
 
 		try {
-			const response = await axios.get(`http://localhost:3000/api/users`);
+			const response = await axios.get(
+				`${process.env.REACT_APP_API_URL}/users`
+			);
 			const user = response.data;
 			dispatch(getAllUserSuccess(user));
 			return Promise.resolve(user);

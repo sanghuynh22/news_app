@@ -6,6 +6,7 @@ import { getAllFastNews } from "../actions/fastNews/getAllFastNews";
 import moment from "moment";
 import FastNew from "../components/FastNew";
 interface NewsData {
+	id?: number;
 	content: string;
 	createdAt: Date; // Modify this field to match the returned date format
 }
@@ -17,9 +18,7 @@ const FastNews: React.FC = () => {
 	);
 
 	useEffect(() => {
-		dispatch(getAllFastNews()).then(() => {
-			console.log("get all fastnews success!");
-		});
+		dispatch(getAllFastNews()).then(() => {});
 	}, []);
 
 	const newsByDate: Record<string, NewsData[]> = fastNews
@@ -46,7 +45,11 @@ const FastNews: React.FC = () => {
 							<p className="fastnews_label">{date}</p>
 						</div>
 						{newsList.map((news) => (
-							<FastNew date={new Date(news.createdAt)} content={news.content} />
+							<FastNew
+								key={news.createdAt}
+								date={new Date(news.createdAt)}
+								content={news.content}
+							/>
 						))}
 					</React.Fragment>
 				))}

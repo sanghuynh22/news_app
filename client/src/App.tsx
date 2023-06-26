@@ -59,14 +59,8 @@ function App() {
 
 			if (token !== null && token !== undefined && token !== "") {
 				const payload = await JSON.parse(atob(token.split(".")[1]));
-				console.log("payload: ", payload);
 				dispatch(setCurrentUser(payload));
-				console.log("JWT have: ", token);
-			} else {
-				console.log("JWT donhave!: ");
 			}
-			console.log("JWT : ", token);
-			console.log("currentUser : ", currentUser);
 		};
 		findToken();
 	}, [dispatch, location]);
