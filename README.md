@@ -11,6 +11,7 @@ The News App offers the following features:
 3. **Chart**: information a bout crypto coins.
 4. **Coin**: purchase, withdraw, read news to get coins.
 5. **Economic Calendar**: tell about important Economic of the world..
+6. **Other tools**: redux, web3, chart.js, ...
 
 ## Installation
 
