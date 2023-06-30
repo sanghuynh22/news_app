@@ -1,6 +1,6 @@
 # 📰 SangNews
 
-This repository contains a web application called News App, developed by Sang Huynh. The News App is a platform that allows users to access and read news articles about finance and crypto, Economic Calendar. It have own crypto coin call "SimCoin" and will give user amount of SimCoin when they read news articles, they can purchase and withdraw SimCoin.
+This repository contains a web application called News App, developed by Sang Huynh. The News App is a platform that allows users to access and read news articles about finance and crypto, Economic Calendar. It have own crypto coin call "SimCoin" and will give user amount of SimCoin when they read news articles, they can trade and withdraw SimCoin.
 
 ## Features
 
