@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import ChartAnnotation from "chartjs-plugin-annotation";
 import "chartjs-plugin-crosshair";
 import { logoutUser } from "../actions/user/logoutUser";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Home = () => {
+	const isLoading = true;
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [currentPrice, setCurrentPrice] = useState<any>();
@@ -21,9 +22,7 @@ const Home = () => {
 
 	useEffect(() => {
 		axios
-			.get(
-				"https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=30"
-			)
+			.get(`${process.env.REACT_APP_COINS_API}`)
 			.then((response) => {
 				setDataBTC(response.data);
 				setCurrentPrice(
@@ -118,7 +117,9 @@ const Home = () => {
 	}, [news]);
 
 	useEffect(() => {
-		dispatch(getAllNews());
+		dispatch(getAllNews()).then(() => {
+			console.log("all news: ", news);
+		});
 	}, []);
 	const handleClickLogout = () => {
 		dispatch(logoutUser()).then(() => {});
@@ -132,6 +133,12 @@ const Home = () => {
 			<div className="home_info">
 				{currentUser ? (
 					<>
+						{currentUser.role === "admin" ||
+							("editor" && (
+								<Link to="/create" className="add_create">
+									<p className="add_icon">+</p>
+								</Link>
+							))}
 						<div className="home_info_container">
 							<div className="home_info_avatar">
 								<p className="home_info_avatar_p">
@@ -157,24 +164,43 @@ const Home = () => {
 			</div>
 			<div className="home_price">
 				Bitcoin :
-				<span className="home_price_span">{Math.floor(currentPrice)} </span>
+				<span className="home_price_span">
+					{Math.floor(currentPrice).toLocaleString("de-De")}
+				</span>
 				USD
 			</div>
 			<div className="home_chart">
 				<canvas ref={chartRef}></canvas>
 			</div>
-			{news
-				?.sort((a: any, b: any) => b.created_at - a.created_at)
-				.map((item: any, i: number) => (
-					<New
-						key={item?.id}
-						id={item?.id}
-						title={item?.title}
-						created_at={item?.created_at}
-						image={item?.image}
-						views={item?.views}
-					/>
-				))}
+			{isLoading ? (
+				<div className="loading">
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+					<div></div>
+				</div>
+			) : (
+				news
+					?.sort((a: any, b: any) => b.created_at - a.created_at)
+					.map((item: any, i: number) => (
+						<New
+							key={item?.id}
+							id={item?.id}
+							title={item?.title}
+							created_at={item?.created_at}
+							image={item?.image}
+							views={item?.views}
+						/>
+					))
+			)}
 			<div className="home_footer">@SangHuynh</div>
 		</div>
 	);

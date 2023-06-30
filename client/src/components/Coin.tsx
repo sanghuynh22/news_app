@@ -163,6 +163,9 @@ const Coin = () => {
 			const newUser = userList?.find(
 				(user: any) => user.id === currentUser.userId
 			);
+			console.log("newUser: ", newUser);
+			console.log("currentUser: ", currentUser);
+			console.log("userList: ", userList);
 			return newUser;
 		} catch (error) {
 			console.error(error);

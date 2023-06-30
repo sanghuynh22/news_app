@@ -17,5 +17,3 @@ pool.on("error", (err) => {
 	process.exit(-1);
 });
 module.exports = pool;
-
-// Sử dụng pool ở đây để thực hiện các truy vấn cơ sở dữ liệu
