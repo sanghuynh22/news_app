@@ -2,7 +2,6 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
-	/* overflow: hidden; */
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
 		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
 		sans-serif;
@@ -28,7 +27,6 @@ input[type="number"]::-webkit-inner-spin-button {
 	z-index: 100;
 	width: 100vw;
 	height: 56px;
-	/* background-color: #ccc; */
 	display: flex;
 	align-items: center;
 }
@@ -263,7 +261,6 @@ th:nth-child(5) {
 td {
 	height: 120px;
 	padding: 10px;
-	/* color: #212529; */
 	border-bottom: 1px solid #dfe3e8;
 }
 
