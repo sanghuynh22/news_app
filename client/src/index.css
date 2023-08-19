@@ -538,7 +538,6 @@ table tr td:last-child {
 .detail_options_container {
 	width: 100%;
 	min-height: 600px;
-	/* display: flex; */
 	justify-content: center;
 }
 .detail_options {
@@ -928,7 +927,6 @@ button:hover {
 	position: absolute;
 	top: 30%;
 	right: 50%;
-	/* transform: translateY(-50%); */
 	transform: translateX(50%);
 	width: 500px;
 	height: 300px;
