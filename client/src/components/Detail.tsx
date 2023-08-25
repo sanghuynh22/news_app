@@ -89,7 +89,7 @@ const Detail = () => {
 				distance: levenshteinDistance(news.title, currentNewsTitle),
 				image: news.image,
 			}))
-			.filter(({ distance }) => distance !== null && distance < 5)
+			.filter(({ distance }) => distance !== null && distance < 10)
 			.sort((a, b) => a.distance - b.distance)
 			.slice(0, 6);
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import Web3 from "web3";
 import SimCoin from "../utils/SimCoin.json";
-import { MetaMaskAvatar } from "react-metamask-avatar"; // add a semicolon here
+import { MetaMaskAvatar } from "react-metamask-avatar";
 import Header from "./Header";
 import simcoin from "../assets/simcoin.jpeg";
 import simcoin2 from "../assets/simcoin2.jpeg";
@@ -69,7 +69,6 @@ const Coin = () => {
 				fromBlock: 0,
 				toBlock: "latest",
 			});
-			console.log("events: ", events);
 			const sortEvents = events.sort((a: any, b: any) => {
 				const blockNumA = Number(a.blockNumber);
 				const blockNumB = Number(b.blockNumber);
@@ -88,7 +87,6 @@ const Coin = () => {
 						tx.from.toLowerCase() === account.toLowerCase() ||
 						tx.to.toLowerCase() === account.toLowerCase()
 				);
-			console.log("transactions: ", transactions);
 			setTransactions(transactions);
 		}
 	}
@@ -99,7 +97,6 @@ const Coin = () => {
 					method: "eth_requestAccounts",
 				});
 				const _web3 = new Web3((window as any).ethereum);
-				console.log("_web3: ", _web3);
 				setWeb3(_web3);
 			} catch (error) {
 				console.error(error);
@@ -163,9 +160,6 @@ const Coin = () => {
 			const newUser = userList?.find(
 				(user: any) => user.id === currentUser.userId
 			);
-			console.log("newUser: ", newUser);
-			console.log("currentUser: ", currentUser);
-			console.log("userList: ", userList);
 			return newUser;
 		} catch (error) {
 			console.error(error);
